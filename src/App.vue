@@ -51,6 +51,26 @@
     <v-content>
       <router-view></router-view>
     </v-content>
+
+    <template v-if="error">
+      <v-snackbar
+              :timeout="5000"
+              :multi-line="true"
+              color="error"
+              @input="closeError"
+              :value="true"
+      >
+        {{error}}
+        <v-btn
+                dark
+                text
+                @click="closeError"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
+    </template>
+
   </v-app>
 </template>
 
@@ -61,16 +81,28 @@ export default {
   props: {
     source: String,
   },
-  data: () => ({
-    drawer: false,
-    links: [
-      {title: 'Login', icon: 'lock', url: '/login'},
-      {title: 'Registration', icon: 'face', url: '/registration'},
-      {title: 'Orders', icon: 'bookmark_border', url: '/orders'},
-      {title: 'New ad', icon: 'note_add', url: '/new'},
-      {title: 'My ads', icon: 'list', url: '/list'}
-    ]
-  }),
+  data() {
+    return {
+      drawer: false,
+      links: [
+        {title: 'Login', icon: 'lock', url: '/login'},
+        {title: 'Registration', icon: 'face', url: '/registration'},
+        {title: 'Orders', icon: 'bookmark_border', url: '/orders'},
+        {title: 'New ad', icon: 'note_add', url: '/new'},
+        {title: 'My ads', icon: 'list', url: '/list'}
+      ]
+    }
+  },
+  computed: {
+    error() {
+      return this.$store.getters.error;
+    }
+  },
+  methods: {
+    closeError() {
+      this.$store.dispatch('clearError')
+    }
+  }
 };
 </script>
 
