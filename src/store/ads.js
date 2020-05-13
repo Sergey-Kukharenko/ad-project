@@ -13,33 +13,14 @@ class Ad {
 
 export default {
     state: {
-        ads: [
-            {
-                title: 'First ad',
-                description: 'Lorem ipsum dolor sit amet',
-                promo: false,
-                imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-                id: '123'
-            },
-            {
-                title: 'Second ad',
-                description: 'Lorem ipsum dolor sit amet',
-                promo: true,
-                imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-                id: '1234'
-            },
-            {
-                title: 'Third ad',
-                description: 'Lorem ipsum dolor sit amet',
-                promo: true,
-                imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-                id: '12345'
-            }
-        ]
+        ads: []
     },
     mutations: {
         createAd(state, payload) {
             state.ads.push(payload)
+        },
+        loadAds(state, payload) {
+            state.ads = payload;
         }
     },
     actions: {
@@ -59,13 +40,40 @@ export default {
                 const ad = await fb.database().ref('ads').push(newAd);
                 commit('setLoading', false);
                 commit('createAd', {
-                   ...newAd,
-                   id: ad.key
+                    ...newAd,
+                    id: ad.key
                 });
             } catch (error) {
                 commit('setError', error.message)
                 commit('setLoading', false)
                 throw error
+            }
+        },
+        async fetchAds({commit}) {
+            commit('clearError');
+            commit('setLoading', true);
+
+            const resultAds = [];
+
+            try {
+                const fbVal = await fb.database().ref('ads').once('value');
+                const ads = fbVal.val();
+                console.log(ads);
+
+                Object.keys(ads).forEach(key => {
+                    const ad = ads[key];
+                    resultAds.push(
+                        new Ad(ad.title, ad.description, ad.ownerId, ad.imageSrc, ad.promo, key)
+                    );
+                });
+
+                commit('loadAds', resultAds);
+
+                commit('setLoading', false);
+            } catch (error) {
+                commit('setError', error.message);
+                commit('setLoading', false);
+                throw error;
             }
         }
     },
