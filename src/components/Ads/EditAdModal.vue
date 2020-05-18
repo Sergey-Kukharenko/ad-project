@@ -66,7 +66,6 @@
             },
             onSave () {
                 if (this.editedDescription !== '' && this.editedTitle !== '') {
-
                     this.$store.dispatch('updateAd', {
                         title: this.editedTitle,
                         description: this.editedDescription,
