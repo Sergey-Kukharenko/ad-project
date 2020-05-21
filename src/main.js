@@ -5,7 +5,20 @@ import store from './store';
 import * as fb from 'firebase';
 import vuetify from './plugins/vuetify';
 import BuyModal from "./components/Shared/BuyModal";
+import Vuetify from 'vuetify/lib'
+import colors from 'vuetify/lib/util/colors'
 
+Vue.use(Vuetify, {
+  theme: {
+    themes: {
+      light: {
+        primary: colors.red.darken1, // #E53935
+        secondary: colors.red.lighten4, // #FFCDD2
+        accent: colors.indigo.base, // #3F51B5
+      },
+    },
+  },
+})
 Vue.component('app-buy-modal', BuyModal)
 Vue.config.productionTip = false
 
