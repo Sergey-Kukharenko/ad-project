@@ -45,7 +45,8 @@
                 return this.$store.getters.loading
             },
             isOwner() {
-                return this.ad.ownerId === this.$store.getters.user.id
+              let user = this.$store.getters.user;
+              return user && this.ad.ownerId === this.$store.getters.user.id;
             }
         },
         components: {
